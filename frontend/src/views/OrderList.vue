@@ -36,11 +36,21 @@
           {{ new Date(row.created_at).toLocaleString() }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="120" fixed="right">
+
+      <!-- 操作列 -->
+      <el-table-column label="操作" width="150" fixed="right">
         <template #default="{ row }">
-          <el-button type="danger" size="small" @click="deleteOrder(row.order_id)">
+          <!-- ✅ 修改1：只有管理员才显示删除按钮 -->
+          <el-button
+            v-if="userStore.isAdmin"
+            type="danger"
+            size="small"
+            @click="deleteOrder(row.order_id)"
+          >
             删除
           </el-button>
+          <!-- ✅ 修改2：非管理员显示提示（可选） -->
+          <span v-else style="color: #909399; font-size: 12px;">无权限</span>
         </template>
       </el-table-column>
     </el-table>
@@ -51,6 +61,11 @@
 import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getOrders, updateOrder, deleteOrder as deleteOrderApi } from '@/api/order'
+// ✅ 修改3：引入 useUserStore
+import { useUserStore } from '@/stores/user'
+
+// ✅ 修改4：创建 store 实例
+const userStore = useUserStore()
 
 const orders = ref([])
 const loading = ref(false)

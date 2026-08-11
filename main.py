@@ -24,6 +24,8 @@ from schemas import UserCreate, UserResponse, Token
 from models import User
 from fastapi.security import OAuth2PasswordBearer
 
+from auth import get_current_admin_user
+
 # ========== 配置日志 ==========
 logging.basicConfig(
     level=logging.INFO,
@@ -209,7 +211,7 @@ def update_order(
 def delete_order(
     order_id: str,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)  # ✅ 添加认证
+    current_user: User = Depends(get_current_admin_user)  # ✅ 只允许管理员删除
 ):
     """删除工单"""
     success = crud.delete_order(db, order_id)
@@ -259,7 +261,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token = create_access_token(data={"sub": user.username})
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "bearer", "role": user.role}
 
 
 # ========== 测试认证接口 ==========

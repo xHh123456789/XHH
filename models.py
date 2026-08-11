@@ -72,6 +72,7 @@ class User(Base):
     password_hash = Column(String(255), nullable=False, comment="密码哈希")
     email = Column(String(100), comment="邮箱")
     is_active = Column(Integer, default=1, comment="是否激活")
+    role = Column(String(20), default="user")  # ✅ 新增：user / admin
     created_at = Column(DateTime, server_default=func.now(), comment="创建时间")
 
     def __repr__(self):

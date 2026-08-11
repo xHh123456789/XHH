@@ -81,6 +81,15 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         raise credentials_exception
     return user
 
+# ✅ 新增：获取当前用户并检查是否为管理员
+def get_current_admin_user(current_user: User = Depends(get_current_user)):
+    """检查当前用户是否为管理员"""
+    if current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="权限不足，需要管理员权限"
+        )
+    return current_user
 
 def get_current_active_user(current_user: User = Depends(get_current_user)):
     """获取当前激活用户"""

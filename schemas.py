@@ -86,6 +86,7 @@ class Token(BaseModel):
     """Token 响应"""
     access_token: str
     token_type: str
+    role: Optional[str] = "user"
 
 class TokenData(BaseModel):
     """Token 内部数据"""
