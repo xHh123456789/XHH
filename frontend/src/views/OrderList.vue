@@ -1,5 +1,24 @@
 <template>
-  <div>
+  <div class="order-page">
+    <!-- ✅ 顶部操作栏 -->
+    <div class="toolbar" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+      <h2>📋 工单列表</h2>
+      <!-- 点击按钮打开弹窗 -->
+      <el-button type="primary" @click="dialogVisible = true" icon="Plus">新增工单</el-button>
+    </div>
+
+    <!-- ✅ 新增工单弹窗 -->
+    <el-dialog
+      v-model="dialogVisible"
+      title="创建新工单"
+      width="500px"
+      destroy-on-close
+    >
+      <!-- 将原有的 OrderForm 放入弹窗中 -->
+      <!-- 当 OrderForm 触发 success 事件时，关闭弹窗并刷新列表 -->
+      <OrderForm @success="handleCreateSuccess" />
+    </el-dialog>
+
     <el-empty v-if="!loading && orders.length === 0" description="暂无工单数据" />
 
     <el-table
@@ -40,7 +59,6 @@
       <!-- 操作列 -->
       <el-table-column label="操作" width="150" fixed="right">
         <template #default="{ row }">
-          <!-- ✅ 修改1：只有管理员才显示删除按钮 -->
           <el-button
             v-if="userStore.isAdmin"
             type="danger"
@@ -49,7 +67,6 @@
           >
             删除
           </el-button>
-          <!-- ✅ 修改2：非管理员显示提示（可选） -->
           <span v-else style="color: #909399; font-size: 12px;">无权限</span>
         </template>
       </el-table-column>
@@ -61,14 +78,15 @@
 import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getOrders, updateOrder, deleteOrder as deleteOrderApi } from '@/api/order'
-// ✅ 修改3：引入 useUserStore
 import { useUserStore } from '@/stores/user'
+import OrderForm from '@/components/OrderForm.vue'
 
-// ✅ 修改4：创建 store 实例
 const userStore = useUserStore()
-
 const orders = ref([])
 const loading = ref(false)
+
+// ✅ 控制弹窗显示/隐藏的状态
+const dialogVisible = ref(false)
 
 const fetchOrders = async () => {
   loading.value = true
@@ -79,6 +97,12 @@ const fetchOrders = async () => {
   } finally {
     loading.value = false
   }
+}
+
+// ✅ 处理新增成功后的回调
+const handleCreateSuccess = () => {
+  dialogVisible.value = false // 1. 关闭弹窗
+  fetchOrders()               // 2. 刷新列表数据
 }
 
 const updateStatus = async (orderId, newStatus) => {
@@ -109,3 +133,13 @@ const deleteOrder = (orderId) => {
 
 onMounted(fetchOrders)
 </script>
+
+<style scoped>
+.order-page {
+  padding: 20px;
+}
+.toolbar h2 {
+  font-size: 20px;
+  color: #1a1a2e;
+}
+</style>
