@@ -1,27 +1,25 @@
+// stores/user.js
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import axios from 'axios'
+import { login as loginApi, register as registerApi } from '@/api/auth'
 import { ElMessage } from 'element-plus'
 
 export const useUserStore = defineStore('user', () => {
+  // ========== State ==========
   const token = ref(localStorage.getItem('token') || '')
   const username = ref(localStorage.getItem('username') || '')
-  const role = ref(localStorage.getItem('role') || 'user')  // ✅ 新增
+  const role = ref(localStorage.getItem('role') || 'user')
 
+  // ========== Getters ==========
   const isLoggedIn = computed(() => !!token.value)
-  const isAdmin = computed(() => role.value === 'admin')  // ✅ 新增
+  const isAdmin = computed(() => role.value === 'admin')
 
+  // ========== Actions ==========
   const login = async (usernameVal, passwordVal) => {
     try {
-      const formData = new FormData()
-      formData.append('username', usernameVal)
-      formData.append('password', passwordVal)
+      const response = await loginApi(usernameVal, passwordVal)
+      const { access_token, role: userRole } = response
 
-      const response = await axios.post('/api/token', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      })
-
-      const { access_token, role: userRole } = response.data  // ✅ 解构 role
       token.value = access_token
       username.value = usernameVal
       role.value = userRole || 'user'
@@ -34,6 +32,17 @@ export const useUserStore = defineStore('user', () => {
       return true
     } catch (error) {
       ElMessage.error(error.response?.data?.detail || '登录失败')
+      return false
+    }
+  }
+
+  const register = async (userData) => {
+    try {
+      await registerApi(userData)
+      ElMessage.success('注册成功，请登录 🎉')
+      return true
+    } catch (error) {
+      ElMessage.error(error.response?.data?.detail || '注册失败')
       return false
     }
   }
@@ -55,6 +64,7 @@ export const useUserStore = defineStore('user', () => {
     isLoggedIn,
     isAdmin,
     login,
+    register,
     logout
   }
 })

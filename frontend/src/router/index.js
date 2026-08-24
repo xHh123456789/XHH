@@ -1,9 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import OrderList from '@/views/OrderList.vue'
-import Stats from '@/views/Stats.vue'
-import Login from '@/views/Login.vue'
-import Register from '@/views/Register.vue'
 import { useUserStore } from '@/stores/user'
+
+
+// ✅ 改为动态导入（路由懒加载） # （按需加载页面组件）
+const OrderList = () => import('@/views/OrderList.vue')
+const Stats = () => import('@/views/Stats.vue')
+const Login = () => import('@/views/Login.vue')
+const Register = () => import('@/views/Register.vue')
+
 
 const routes = [
   {

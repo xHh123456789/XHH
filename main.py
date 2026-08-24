@@ -26,6 +26,9 @@ from fastapi.security import OAuth2PasswordBearer
 
 from auth import get_current_admin_user
 
+from sqlalchemy import func, cast, Date
+from datetime import datetime, timedelta
+
 # ========== 配置日志 ==========
 logging.basicConfig(
     level=logging.INFO,
@@ -263,6 +266,26 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
     access_token = create_access_token(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer", "role": user.role}
 
+# ========== 图表 ==========
+@app.get("/stats/daily")
+def get_daily_stats(db: Session = Depends(get_db)):
+    """获取近7天每日工单创建数量"""
+    # 计算7天前的日期
+    seven_days_ago = datetime.now().date() - timedelta(days=7)
+
+    # 按天分组统计
+    results = db.query(
+        cast(Order.created_at, Date).label("date"),
+        func.count(Order.id).label("count")
+    ).filter(
+        cast(Order.created_at, Date) >= seven_days_ago
+    ).group_by(
+        cast(Order.created_at, Date)
+    ).order_by(
+        cast(Order.created_at, Date)
+    ).all()
+
+    return [{"date": r.date.strftime("%m-%d"), "count": r.count} for r in results]
 
 # ========== 测试认证接口 ==========
 

@@ -1,7 +1,10 @@
 <template>
   <el-container style="height: 100vh;">
     <!-- 侧边栏 -->
-    <el-aside width="200px" style="background: #1a1a2e; color: white;">
+    <el-aside
+      width="200px"
+      style="background: #1a1a2e; color: white;"
+    >
       <div style="padding: 20px; text-align: center; font-size: 18px; font-weight: bold; border-bottom: 1px solid #2d2d44;">
         📋 工单系统
       </div>
@@ -23,7 +26,10 @@
         <el-menu-item index="/stats">
           <span>📊 数据统计</span>
         </el-menu-item>
-        <el-menu-item @click="handleLogout" style="color: #f56c6c;">
+        <el-menu-item
+          style="color: #f56c6c;"
+          @click="handleLogout"
+        >
           <span>🚪 退出登录</span>
         </el-menu-item>
       </el-menu>
@@ -39,7 +45,6 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {useUserStore} from '@/stores/user'
-import {ElMessage} from 'element-plus'
 
 const route = useRoute()
 const router = useRouter()

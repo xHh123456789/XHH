@@ -1,10 +1,19 @@
 <template>
   <div class="order-page">
     <!-- ✅ 顶部操作栏 -->
-    <div class="toolbar" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <div
+      class="toolbar"
+      style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;"
+    >
       <h2>📋 工单列表</h2>
       <!-- 点击按钮打开弹窗 -->
-      <el-button type="primary" @click="dialogVisible = true" icon="Plus">新增工单</el-button>
+      <el-button
+        type="primary"
+        icon="Plus"
+        @click="dialogVisible = true"
+      >
+        新增工单
+      </el-button>
     </div>
 
     <!-- ✅ 新增工单弹窗 -->
@@ -19,55 +28,92 @@
       <OrderForm @success="handleCreateSuccess" />
     </el-dialog>
 
-    <el-empty v-if="!loading && orders.length === 0" description="暂无工单数据" />
+    <el-empty
+      v-if="!loading && orders.length === 0"
+      description="暂无工单数据"
+    />
 
     <el-table
       v-else
+      v-loading="loading"
       :data="orders"
       border
       stripe
       style="width: 100%"
-      v-loading="loading"
     >
-      <el-table-column prop="order_id" label="工单号" width="120" />
-      <el-table-column prop="customer_name" label="客户" width="120" />
-      <el-table-column prop="address" label="地址" min-width="180" />
-      <el-table-column label="状态" width="180">
+      <el-table-column
+        prop="order_id"
+        label="工单号"
+        width="120"
+      />
+      <el-table-column
+        prop="customer_name"
+        label="客户"
+        width="120"
+      />
+      <el-table-column
+        prop="address"
+        label="地址"
+        min-width="180"
+      />
+      <el-table-column
+        label="状态"
+        width="180"
+      >
         <template #default="{ row }">
           <el-select
             :model-value="row.status"
             size="small"
             @change="updateStatus(row.order_id, $event)"
           >
-            <el-option label="待处理" value="待处理" />
-            <el-option label="处理中" value="处理中" />
-            <el-option label="已完成" value="已完成" />
+            <el-option
+              label="待处理"
+              value="待处理"
+            />
+            <el-option
+              label="处理中"
+              value="处理中"
+            />
+            <el-option
+              label="已完成"
+              value="已完成"
+            />
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="工程师" width="150">
+      <el-table-column
+        label="工程师"
+        width="150"
+      >
         <template #default="{ row }">
           {{ row.engineers?.join('、') || '未分配' }}
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" width="180">
+      <el-table-column
+        label="创建时间"
+        width="180"
+      >
         <template #default="{ row }">
           {{ new Date(row.created_at).toLocaleString() }}
         </template>
       </el-table-column>
 
       <!-- 操作列 -->
-      <el-table-column label="操作" width="150" fixed="right">
+      <el-table-column
+        label="操作"
+        width="150"
+        fixed="right"
+      >
         <template #default="{ row }">
           <el-button
-            v-if="userStore.isAdmin"
+            v-permission="'admin'"
             type="danger"
             size="small"
             @click="deleteOrder(row.order_id)"
           >
             删除
           </el-button>
-          <span v-else style="color: #909399; font-size: 12px;">无权限</span>
+          <!--<span v-if="userStore.role !== 'admin'" style="color: #909399; font-size: 12px;">无权限</span>-->
         </template>
       </el-table-column>
     </el-table>
@@ -78,10 +124,8 @@
 import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getOrders, updateOrder, deleteOrder as deleteOrderApi } from '@/api/order'
-import { useUserStore } from '@/stores/user'
 import OrderForm from '@/components/OrderForm.vue'
 
-const userStore = useUserStore()
 const orders = ref([])
 const loading = ref(false)
 
@@ -94,6 +138,7 @@ const fetchOrders = async () => {
     orders.value = await getOrders()
   } catch (err) {
     console.error(err)
+    ElMessage.error('获取工单列表失败')
   } finally {
     loading.value = false
   }
