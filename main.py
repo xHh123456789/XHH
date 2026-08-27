@@ -21,7 +21,7 @@ from auth import (
     get_current_user, get_current_active_user
 )
 from schemas import UserCreate, UserResponse, Token
-from models import User
+from models import User, Order
 from fastapi.security import OAuth2PasswordBearer
 
 from auth import get_current_admin_user
