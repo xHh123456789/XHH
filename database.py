@@ -4,8 +4,16 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# ========== 加载环境变量 ==========
-load_dotenv()
+# ========== 加载环境变量（多环境） ==========
+# 根据环境变量 ENV 决定加载哪个配置文件（ENV 由启动命令设置，如 $env:ENV="production"）
+ENV = os.getenv("ENV", "development")
+
+if ENV == "production":
+    load_dotenv(".env.production")
+elif ENV == "test":
+    load_dotenv(".env.test")
+else:
+    load_dotenv(".env.development")
 
 # ========== 数据库配置 ==========
 DB_HOST = os.getenv("DB_HOST", "localhost")
