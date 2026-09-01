@@ -1,59 +1,29 @@
 <template>
   <div class="order-form-container">
     <!-- 使用 el-form 进行布局 -->
-    <el-form
-      :model="form"
-      label-position="top"
-    >
+    <el-form :model="form" label-position="top">
       <el-form-item label="工单编号">
-        <el-input
-          v-model="form.order_id"
-          placeholder="例如：T100"
-        />
+        <el-input v-model="form.order_id" placeholder="例如：T100" />
       </el-form-item>
 
       <el-form-item label="客户姓名">
-        <el-input
-          v-model="form.customer_name"
-          placeholder="请输入客户姓名"
-        />
+        <el-input v-model="form.customer_name" placeholder="请输入客户姓名" />
       </el-form-item>
 
       <el-form-item label="安装地址">
-        <el-input
-          v-model="form.address"
-          placeholder="请输入详细安装地址"
-        />
+        <el-input v-model="form.address" placeholder="请输入详细安装地址" />
       </el-form-item>
 
       <el-form-item label="工单状态">
-        <el-select
-          v-model="form.status"
-          placeholder="选择状态"
-          style="width: 100%"
-        >
-          <el-option
-            label="待处理"
-            value="待处理"
-          />
-          <el-option
-            label="处理中"
-            value="处理中"
-          />
-          <el-option
-            label="已完成"
-            value="已完成"
-          />
+        <el-select v-model="form.status" placeholder="选择状态" style="width: 100%">
+          <el-option label="待处理" value="待处理" />
+          <el-option label="处理中" value="处理中" />
+          <el-option label="已完成" value="已完成" />
         </el-select>
       </el-form-item>
 
-      <el-form-item style="margin-top: 20px;">
-        <el-button
-          type="primary"
-          :loading="submitting"
-          style="width: 100%"
-          @click="submitForm"
-        >
+      <el-form-item style="margin-top: 20px">
+        <el-button type="primary" :loading="submitting" style="width: 100%" @click="submitForm">
           提交工单
         </el-button>
       </el-form-item>

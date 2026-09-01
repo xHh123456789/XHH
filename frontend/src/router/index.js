@@ -1,20 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
-
 // ✅ 改为动态导入（路由懒加载） # （按需加载页面组件）
 const OrderList = () => import('@/views/OrderList.vue')
 const Stats = () => import('@/views/Stats.vue')
 const Login = () => import('@/views/Login.vue')
 const Register = () => import('@/views/Register.vue')
 
-
 const routes = [
   {
     path: '/login',
     name: 'Login',
     component: Login,
-    meta: { requiresAuth: false }  // 不需要登录
+    meta: { requiresAuth: false } // 不需要登录
   },
   {
     path: '/register',
@@ -30,7 +28,7 @@ const routes = [
     path: '/orders',
     name: 'OrderList',
     component: OrderList,
-    meta: { requiresAuth: true }   // 需要登录
+    meta: { requiresAuth: true } // 需要登录
   },
   {
     path: '/stats',

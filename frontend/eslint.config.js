@@ -2,16 +2,16 @@
 import js from '@eslint/js'
 import vue from 'eslint-plugin-vue'
 import globals from 'globals'
+import prettier from '@vue/eslint-config-prettier'  // ✅ 新增
 
 export default [
-  // 忽略打包产物和依赖目录（必须单独一个对象写 ignores）
   { ignores: ['dist/**', 'node_modules/**'] },
   js.configs.recommended,
   ...vue.configs['flat/recommended'],
+  prettier,  // ✅ 新增：放在最后，关闭与 Prettier 冲突的格式规则
   {
     files: ['**/*.{js,vue}'],
     languageOptions: {
-      // 声明浏览器 + Node 内置变量，解决 no-undef（document/window/console/module/process 等）
       globals: {
         ...globals.browser,
         ...globals.node

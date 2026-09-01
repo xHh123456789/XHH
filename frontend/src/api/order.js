@@ -2,17 +2,17 @@
 import request from '@/utils/request'
 
 // 获取工单列表
-export const getOrders = (params) => {
+export const getOrders = params => {
   return request.get('/orders', { params })
 }
 
 // 获取单个工单
-export const getOrder = (orderId) => {
+export const getOrder = orderId => {
   return request.get(`/orders/${orderId}`)
 }
 
 // 创建工单
-export const createOrder = (data) => {
+export const createOrder = data => {
   return request.post('/orders', data)
 }
 
@@ -22,6 +22,6 @@ export const updateOrder = (orderId, data) => {
 }
 
 // 删除工单
-export const deleteOrder = (orderId) => {
+export const deleteOrder = orderId => {
   return request.delete(`/orders/${orderId}`)
 }

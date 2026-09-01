@@ -36,7 +36,7 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  const register = async (userData) => {
+  const register = async userData => {
     try {
       await registerApi(userData)
       ElMessage.success('注册成功，请登录 🎉')

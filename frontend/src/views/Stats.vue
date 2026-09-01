@@ -1,86 +1,63 @@
 <template>
   <div>
-    <h2 style="margin-bottom: 20px;">
-      📊 工单统计
-    </h2>
+    <h2 style="margin-bottom: 20px">📊 工单统计</h2>
 
     <!-- 统计卡片 -->
     <el-row :gutter="16">
       <el-col :span="6">
         <el-card>
-          <div style="text-align: center;">
-            <div style="font-size: 32px; color: #409EFF;">
+          <div style="text-align: center">
+            <div style="font-size: 32px; color: #409eff">
               {{ stats.total || 0 }}
             </div>
-            <div style="color: #909399; font-size: 14px;">
-              总工单
-            </div>
+            <div style="color: #909399; font-size: 14px">总工单</div>
           </div>
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card>
-          <div style="text-align: center;">
-            <div style="font-size: 32px; color: #E6A23C;">
+          <div style="text-align: center">
+            <div style="font-size: 32px; color: #e6a23c">
               {{ stats.pending || 0 }}
             </div>
-            <div style="color: #909399; font-size: 14px;">
-              待处理
-            </div>
+            <div style="color: #909399; font-size: 14px">待处理</div>
           </div>
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card>
-          <div style="text-align: center;">
-            <div style="font-size: 32px; color: #409EFF;">
+          <div style="text-align: center">
+            <div style="font-size: 32px; color: #409eff">
               {{ stats.processing || 0 }}
             </div>
-            <div style="color: #909399; font-size: 14px;">
-              处理中
-            </div>
+            <div style="color: #909399; font-size: 14px">处理中</div>
           </div>
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card>
-          <div style="text-align: center;">
-            <div style="font-size: 32px; color: #67C23A;">
+          <div style="text-align: center">
+            <div style="font-size: 32px; color: #67c23a">
               {{ stats.completed || 0 }}
             </div>
-            <div style="color: #909399; font-size: 14px;">
-              已完成
-            </div>
+            <div style="color: #909399; font-size: 14px">已完成</div>
           </div>
         </el-card>
       </el-col>
     </el-row>
 
     <!-- 图表区域 -->
-    <el-row
-      :gutter="16"
-      style="margin-top: 20px;"
-    >
+    <el-row :gutter="16" style="margin-top: 20px">
       <el-col :span="12">
         <el-card>
-          <div style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">
-            工单状态分布
-          </div>
-          <BaseChart
-            :option="pieOption"
-            height="350px"
-          />
+          <div style="font-size: 16px; font-weight: 600; margin-bottom: 12px">工单状态分布</div>
+          <BaseChart :option="pieOption" height="350px" />
         </el-card>
       </el-col>
       <el-col :span="12">
         <el-card>
-          <div style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">
-            近7天工单趋势
-          </div>
-          <BaseChart
-            :option="lineOption"
-            height="350px"
-          />
+          <div style="font-size: 16px; font-weight: 600; margin-bottom: 12px">近7天工单趋势</div>
+          <BaseChart :option="lineOption" height="350px" />
         </el-card>
       </el-col>
     </el-row>

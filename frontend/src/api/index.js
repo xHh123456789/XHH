@@ -3,8 +3,4 @@ import * as orderApi from './order'
 import * as authApi from './auth'
 import * as statsApi from './stats'
 
-export {
-  orderApi,
-  authApi,
-  statsApi
-}
+export { orderApi, authApi, statsApi }

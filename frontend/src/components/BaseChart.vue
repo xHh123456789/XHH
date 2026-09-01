@@ -1,8 +1,5 @@
 <template>
-  <div
-    ref="chartRef"
-    :style="{ width: '100%', height: height }"
-  />
+  <div ref="chartRef" :style="{ width: '100%', height: height }" />
 </template>
 
 <script setup>
@@ -36,7 +33,7 @@ const initChart = () => {
 // 监听 option 变化，更新图表
 watch(
   () => props.option,
-  (newOption) => {
+  newOption => {
     if (chartInstance) {
       chartInstance.setOption(newOption)
     }

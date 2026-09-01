@@ -11,7 +11,7 @@ export const login = (username, password) => {
 }
 
 // 用户注册
-export const register = (data) => {
+export const register = data => {
   return request.post('/register', data)
 }
 

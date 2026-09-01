@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'  // 新增
+import { createPinia } from 'pinia' // 新增
 import App from './App.vue'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
@@ -10,9 +10,9 @@ import permission from './directives/permission'
 import loadingPlugin from './plugins/loading'
 
 const app = createApp(App)
-const pinia = createPinia()  // 创建 Pinia 实例
+const pinia = createPinia() // 创建 Pinia 实例
 
-app.use(pinia)           // 注册 Pinia
+app.use(pinia) // 注册 Pinia
 app.use(ElementPlus, { locale: zhCn })
 app.use(router)
 app.use(loadingPlugin)

@@ -16,24 +16,24 @@ const request = axios.create({
 
 // 请求拦截器（在这里统一注入 Token）
 request.interceptors.request.use(
-  (config) => {
+  config => {
     const userStore = useUserStore() // 👈 获取当前用户的 store 状态
     if (userStore.token) {
       config.headers.Authorization = `Bearer ${userStore.token}` // 👈 正式注入 Token
     }
     return config
   },
-  (error) => {
+  error => {
     return Promise.reject(error)
   }
 )
 
 // 响应拦截器（统一处理错误）
 request.interceptors.response.use(
-  (response) => {
+  response => {
     return response.data // 直接返回 data，少写一层 .data
   },
-  (error) => {
+  error => {
     const message = error.response?.data?.detail || error.message || '网络错误'
     ElMessage.error(message)
     return Promise.reject(error)
