@@ -8,8 +8,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix",
-    "lint:check": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs",
+    "lint": "eslint . --fix",
+    "lint:check": "eslint .",
     "format": "prettier --write .",
     "prepare": "husky"
   },
@@ -30,6 +30,7 @@
     "@vitejs/plugin-vue": "^6.0.8",
     "@vitest/coverage-v8": "^4.1.11",
     "@vue/eslint-config-prettier": "^10.2.0",
+    "@vue/eslint-config-typescript": "^14.9.0",
     "@vue/test-utils": "^2.4.11",
     "eslint": "^10.8.1",
     "eslint-plugin-vue": "^10.10.0",
@@ -45,10 +46,9 @@
     "vue-tsc": "^3.3.11"
   },
   "lint-staged": {
-    "*.{vue,js,jsx,cjs,mjs}": [
+    "*.{vue,js,jsx,cjs,mjs,ts,tsx}": [
       "prettier --write",
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ],
     "*.{json,md}": [
       "prettier --write"

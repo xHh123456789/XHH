@@ -31,15 +31,19 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { createOrder } from '@/api/order'
+import type { OrderCreateParams } from '@/types'
 
-// 定义向父组件发送的事件
-const emit = defineEmits(['success'])
+// ========== 定义向父组件发送的事件（类型化写法）==========
+const emit = defineEmits<{
+  (e: 'success'): void
+}>()
 
-const form = reactive({
+// ========== 表单数据（reactive 泛型）==========
+const form = reactive<OrderCreateParams>({
   order_id: '',
   customer_name: '',
   address: '',
@@ -48,7 +52,7 @@ const form = reactive({
 
 const submitting = ref(false)
 
-const submitForm = async () => {
+const submitForm = async (): Promise<void> => {
   // 基础校验
   if (!form.order_id || !form.customer_name || !form.address) {
     ElMessage.warning('请完整填写工单信息')

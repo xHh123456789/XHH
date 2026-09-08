@@ -45,16 +45,19 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 // ✅ 核心修改：将 deleteOrder 重命名为 deleteOrderApi
 import { getOrders, updateOrder, deleteOrder as deleteOrderApi } from '@/api/order'
+import type { Order, OrderStatus } from '@/types'
 
-const orders = ref([])
+// ========== 响应式数据（空数组必须显式泛型，否则推断成 never[]）==========
+const orders = ref<Order[]>([])
 const loading = ref(false)
 
-const fetchOrders = async () => {
+// ========== 获取工单列表 ==========
+const fetchOrders = async (): Promise<void> => {
   loading.value = true
   try {
     orders.value = await getOrders()
@@ -65,9 +68,11 @@ const fetchOrders = async () => {
   }
 }
 
-const updateStatus = async (orderId, newStatus) => {
+// ========== 更新状态 ==========
+const updateStatus = async (orderId: string, newStatus: string): Promise<void> => {
   try {
-    await updateOrder(orderId, { status: newStatus })
+    // el-select 的 change 事件给的是 string，断言收窄成三个状态值
+    await updateOrder(orderId, { status: newStatus as OrderStatus })
     ElMessage.success('状态更新成功 ✅')
     await fetchOrders()
   } catch (err) {
@@ -75,8 +80,8 @@ const updateStatus = async (orderId, newStatus) => {
   }
 }
 
-// 组件内部的删除函数
-const deleteOrder = orderId => {
+// ========== 删除工单 ==========
+const deleteOrder = (orderId: string): void => {
   ElMessageBox.confirm(`确定要删除工单 ${orderId} 吗？此操作不可恢复！`, '提示', {
     confirmButtonText: '确定删除',
     cancelButtonText: '取消',
@@ -95,6 +100,7 @@ const deleteOrder = orderId => {
     .catch(() => {})
 }
 
+// defineExpose 自动推断类型
 defineExpose({ fetchOrders })
 
 onMounted(fetchOrders)

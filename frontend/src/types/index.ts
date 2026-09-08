@@ -24,6 +24,7 @@ export interface OrderCreateParams {
   order_id: string
   customer_name: string
   address: string
+  status?: OrderStatus // 后端 schema 接受，可选，默认'待处理'
   engineer_names?: string[]
 }
 
