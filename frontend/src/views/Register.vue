@@ -28,23 +28,25 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { ElMessage } from 'element-plus'
+import type { RegisterParams } from '@/types'
 
 const router = useRouter()
 const userStore = useUserStore()
 
-const form = reactive({
+// 复用类型中心的注册参数类型
+const form = reactive<RegisterParams>({
   username: '',
   password: '',
   email: ''
 })
-const loading = ref(false)
+const loading = ref<boolean>(false)
 
-const handleRegister = async () => {
+const handleRegister = async (): Promise<void> => {
   if (!form.username || !form.password) {
     ElMessage.warning('用户名和密码为必填项')
     return
@@ -63,7 +65,7 @@ const handleRegister = async () => {
   }
 }
 
-const goToLogin = () => {
+const goToLogin = (): void => {
   router.push('/login')
 }
 </script>

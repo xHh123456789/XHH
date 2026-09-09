@@ -26,22 +26,30 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/stores/user'
 
+// ========== 表单类型（今天知识点：本地 interface）==========
+interface LoginForm {
+  username: string
+  password: string
+}
+
 const router = useRouter()
 const userStore = useUserStore()
 
-const form = reactive({
+// ========== 响应式数据 ==========
+const form = reactive<LoginForm>({
   username: '',
   password: ''
 })
-const loading = ref(false)
+const loading = ref<boolean>(false)
 
-const handleLogin = async () => {
+// ========== 登录处理 ==========
+const handleLogin = async (): Promise<void> => {
   if (!form.username || !form.password) {
     ElMessage.warning('请填写完整信息')
     return
@@ -57,7 +65,8 @@ const handleLogin = async () => {
   }
 }
 
-const goToRegister = () => {
+// ========== 跳转注册 ==========
+const goToRegister = (): void => {
   router.push('/register')
 }
 </script>
