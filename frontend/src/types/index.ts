@@ -73,3 +73,20 @@ export interface StatsResponse {
   processing: number
   completed: number
 }
+
+// ========== 每日统计 ==========
+
+// 近7天每日工单数（/stats/daily 响应项）
+export interface DailyStat {
+  date: string
+  count: number
+}
+
+// ========== 通用 API 响应包装（泛型接口：T 是占位符，使用时才确定类型）==========
+
+export interface ApiResponse<T> {
+  data: T
+  total?: number
+  status?: number
+  message?: string
+}

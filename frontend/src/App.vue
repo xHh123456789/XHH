@@ -50,7 +50,7 @@
   </el-container>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
@@ -59,9 +59,9 @@ const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
 
-const activeMenu = computed(() => route.path)
+const activeMenu = computed<string>(() => route.path)
 
-const handleLogout = () => {
+const handleLogout = (): void => {
   userStore.logout()
   router.push('/login')
 }

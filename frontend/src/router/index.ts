@@ -1,13 +1,16 @@
+// src/router/index.ts
 import { createRouter, createWebHistory } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
-// ✅ 改为动态导入（路由懒加载） # （按需加载页面组件）
+// ✅ 动态导入（路由懒加载，按需加载页面组件）
 const OrderList = () => import('@/views/OrderList.vue')
 const Stats = () => import('@/views/Stats.vue')
 const Login = () => import('@/views/Login.vue')
 const Register = () => import('@/views/Register.vue')
 
-const routes = [
+// ========== 路由配置（RouteRecordRaw：每条路由的"户口本"类型）==========
+const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'Login',
@@ -43,16 +46,14 @@ const router = createRouter({
   routes
 })
 
-// ========== 路由守卫 ==========
-router.beforeEach((to, from, next) => {
+// ========== 路由守卫（to/from/next 的类型 vue-router 自动推断，不用手写）==========
+router.beforeEach((to, _from, next) => {
   const userStore = useUserStore()
 
-  // 如果页面需要登录，但用户未登录 → 跳转到登录页
   if (to.meta.requiresAuth && !userStore.isLoggedIn) {
     next('/login')
   } else {
     next()
   }
 })
-
 export default router

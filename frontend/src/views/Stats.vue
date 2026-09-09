@@ -64,16 +64,25 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import axios from 'axios'
 import BaseChart from '@/components/BaseChart.vue'
+import { getStats, getDailyStats } from '@/api/stats'
+import type { EChartsOption } from 'echarts'
+import type { StatsResponse, DailyStat } from '@/types'
 
-const stats = ref({})
-const dailyStats = ref([])
+// ========== 数据（必须显式泛型）==========
+const stats = ref<StatsResponse>({
+  total: 0,
+  pending: 0,
+  processing: 0,
+  completed: 0
+})
 
-// 饼图配置
-const pieOption = computed(() => ({
+const dailyStats = ref<DailyStat[]>([])
+
+// ========== 饼图配置（EChartsOption 让 IDE 能补全所有图表配置项）==========
+const pieOption = computed<EChartsOption>(() => ({
   tooltip: { trigger: 'item' },
   legend: { orient: 'vertical', right: 10, top: 'center' },
   series: [
@@ -99,12 +108,12 @@ const pieOption = computed(() => ({
   ]
 }))
 
-// 折线图配置
-const lineOption = computed(() => ({
+// ========== 折线图配置 ==========
+const lineOption = computed<EChartsOption>(() => ({
   tooltip: { trigger: 'axis' },
   xAxis: {
     type: 'category',
-    data: dailyStats.value.map(item => item.date) || []
+    data: dailyStats.value.map(item => item.date)
   },
   yAxis: {
     type: 'value',
@@ -112,7 +121,7 @@ const lineOption = computed(() => ({
   },
   series: [
     {
-      data: dailyStats.value.map(item => item.count) || [],
+      data: dailyStats.value.map(item => item.count),
       type: 'line',
       smooth: true,
       lineStyle: { color: '#409EFF', width: 3 },
@@ -125,32 +134,30 @@ const lineOption = computed(() => ({
   ]
 }))
 
-// 获取统计数据
-const fetchStats = async () => {
+// ========== 获取统计数据（走类型化 API，带 token 拦截器）==========
+const fetchStats = async (): Promise<void> => {
   try {
-    const response = await axios.get('/api/stats')
-    stats.value = response.data
+    stats.value = await getStats()
   } catch (error) {
     console.error('获取统计数据失败：', error)
   }
 }
 
-// 获取近7天每日工单数量
-const fetchDailyStats = async () => {
+// ========== 获取近7天每日工单数量 ==========
+const fetchDailyStats = async (): Promise<void> => {
   try {
-    const response = await axios.get('/api/stats/daily')
-    dailyStats.value = response.data
+    dailyStats.value = await getDailyStats()
   } catch (error) {
     console.error('获取每日统计失败：', error)
     // 模拟数据（开发时使用）
     dailyStats.value = [
-      { date: '08-12', count: 3 },
-      { date: '08-13', count: 5 },
-      { date: '08-14', count: 2 },
-      { date: '08-15', count: 7 },
-      { date: '08-16', count: 4 },
-      { date: '08-17', count: 6 },
-      { date: '08-18', count: 8 }
+      { date: '09-02', count: 3 },
+      { date: '09-03', count: 5 },
+      { date: '09-04', count: 2 },
+      { date: '09-05', count: 7 },
+      { date: '09-06', count: 4 },
+      { date: '09-07', count: 6 },
+      { date: '09-08', count: 8 }
     ]
   }
 }
