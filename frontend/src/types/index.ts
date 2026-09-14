@@ -19,20 +19,15 @@ export interface OrderListParams {
   keyword?: string
 }
 
-// 创建工单参数
-export interface OrderCreateParams {
-  order_id: string
-  customer_name: string
-  address: string
-  status?: OrderStatus // 后端 schema 接受，可选，默认'待处理'
-  engineer_names?: string[]
-}
+// 创建工单参数（工具类型派生）：
+// 必填三项用 Pick 保持必填；status 可选用 Partial 包裹；engineer_names 是后端特有字段用交叉补充
+export type OrderCreateParams = Pick<Order, 'order_id' | 'customer_name' | 'address'> &
+  Partial<Pick<Order, 'status'>> & {
+    engineer_names?: string[]
+  }
 
-// 更新工单参数（全是可选——更新时只传要改的）
-export interface OrderUpdateParams {
-  customer_name?: string
-  address?: string
-  status?: OrderStatus
+// 更新工单参数（只允许改这些字段，全部可选）
+export type OrderUpdateParams = Partial<Pick<Order, 'customer_name' | 'address' | 'status'>> & {
   engineer_names?: string[]
 }
 
@@ -82,9 +77,14 @@ export interface DailyStat {
   count: number
 }
 
-// ========== 通用 API 响应包装（泛型接口：T 是占位符，使用时才确定类型）==========
+// 工单摘要（列表页其实只用到这三个字段渲染）
+export type OrderSummary = Pick<Order, 'order_id' | 'customer_name' | 'status'>
 
-export interface ApiResponse<T> {
+// 状态 → 数量 的键值对（将来做统计映射时用）
+export type StatusCount = Record<OrderStatus, number>
+
+// 通用 API 响应包装（T = any：不传泛型时默认 any——默认泛型参数知识点）
+export interface ApiResponse<T = unknown> {
   data: T
   total?: number
   status?: number
