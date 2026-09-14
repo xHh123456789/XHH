@@ -1,19 +1,20 @@
 import { ref } from 'vue'
+import type { App } from 'vue'
 
 // 全局加载状态
 const isLoading = ref(false)
 let loadingCount = 0
 
-export default {
-  install(app) {
+const loadingPlugin = {
+  install(app: App): void {
     // 开启加载
-    const show = () => {
+    const show = (): void => {
       loadingCount++
       isLoading.value = true
     }
 
     // 关闭加载
-    const hide = () => {
+    const hide = (): void => {
       loadingCount--
       if (loadingCount <= 0) {
         loadingCount = 0
@@ -32,3 +33,5 @@ export default {
     app.provide('loading', { show, hide, isLoading })
   }
 }
+
+export default loadingPlugin

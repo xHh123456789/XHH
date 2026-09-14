@@ -15,17 +15,26 @@
   </el-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, watch } from 'vue'
 import { WarningFilled } from '@element-plus/icons-vue'
 
-const props = defineProps({
-  modelValue: Boolean,
-  title: { type: String, default: '提示' },
-  message: { type: String, default: '确定执行此操作吗？' }
+interface Props {
+  modelValue: boolean
+  title?: string
+  message?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  title: '提示',
+  message: '确定执行此操作吗？'
 })
 
-const emit = defineEmits(['update:modelValue', 'confirm', 'cancel'])
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: boolean): void
+  (e: 'confirm'): void
+  (e: 'cancel'): void
+}>()
 
 const visible = ref(false)
 
@@ -36,12 +45,12 @@ watch(
   }
 )
 
-const handleConfirm = () => {
+const handleConfirm = (): void => {
   emit('confirm')
   emit('update:modelValue', false)
 }
 
-const handleCancel = () => {
+const handleCancel = (): void => {
   emit('cancel')
   emit('update:modelValue', false)
 }

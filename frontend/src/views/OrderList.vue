@@ -70,19 +70,20 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getOrders, updateOrder, deleteOrder as deleteOrderApi } from '@/api/order'
 import OrderForm from '@/components/OrderForm.vue'
+import type { Order, OrderStatus } from '@/types'
 
-const orders = ref([])
+const orders = ref<Order[]>([])
 const loading = ref(false)
 
 // ✅ 控制弹窗显示/隐藏的状态
 const dialogVisible = ref(false)
 
-const fetchOrders = async () => {
+const fetchOrders = async (): Promise<void> => {
   loading.value = true
   try {
     orders.value = await getOrders()
@@ -95,14 +96,15 @@ const fetchOrders = async () => {
 }
 
 // ✅ 处理新增成功后的回调
-const handleCreateSuccess = () => {
+const handleCreateSuccess = (): void => {
   dialogVisible.value = false // 1. 关闭弹窗
   fetchOrders() // 2. 刷新列表数据
 }
 
-const updateStatus = async (orderId, newStatus) => {
+const updateStatus = async (orderId: string, newStatus: string): Promise<void> => {
   try {
-    await updateOrder(orderId, { status: newStatus })
+    // el-select 的 change 事件给的是 string，断言收窄成 OrderStatus
+    await updateOrder(orderId, { status: newStatus as OrderStatus })
     ElMessage.success('状态更新成功 ✅')
     await fetchOrders()
   } catch (err) {
@@ -110,7 +112,7 @@ const updateStatus = async (orderId, newStatus) => {
   }
 }
 
-const deleteOrder = orderId => {
+const deleteOrder = (orderId: string): void => {
   ElMessageBox.confirm(`确定要删除工单 ${orderId} 吗？此操作不可恢复！`, '提示', {
     confirmButtonText: '确定删除',
     cancelButtonText: '取消',
@@ -130,13 +132,3 @@ const deleteOrder = orderId => {
 
 onMounted(fetchOrders)
 </script>
-
-<style scoped>
-.order-page {
-  padding: 20px;
-}
-.toolbar h2 {
-  font-size: 20px;
-  color: #1a1a2e;
-}
-</style>
